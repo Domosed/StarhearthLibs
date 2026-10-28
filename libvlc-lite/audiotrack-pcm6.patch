@@ -1,0 +1,29 @@
+--- a/modules/audio_output/audiotrack.c
++++ b/modules/audio_output/audiotrack.c
+@@ -56,6 +56,7 @@
+ enum at_dev {
+     AT_DEV_STEREO = 0,
+     AT_DEV_PCM,
++    AT_DEV_PCM6, /* White TV: up to 5.1, 7.1 brought down to it */
+     AT_DEV_ENCODED,
+ };
+ #define AT_DEV_DEFAULT AT_DEV_STEREO
+@@ -67,6 +68,8 @@
+     enum at_dev at_dev;
+ } at_devs[] = {
+     { "stereo", "Up to 2 channels (compat mode).", AT_DEV_STEREO },
++    /* White TV: before "pcm", the ids are matched by their beginning */
++    { "pcm6", "Up to 6 channels (5.1).", AT_DEV_PCM6 },
+     { "pcm", "Up to 8 channels.", AT_DEV_PCM },
+ 
+     /* With "encoded", the module will try to play every audio codecs via
+@@ -1250,7 +1253,8 @@
+     else
+     {
+         b_try_passthrough = var_InheritBool( p_aout, "spdif" );
+-        i_max_channels = p_sys->at_dev == AT_DEV_STEREO ? 2 : AT_DEV_MAX_CHANNELS;
++        i_max_channels = p_sys->at_dev == AT_DEV_STEREO ? 2
++                       : p_sys->at_dev == AT_DEV_PCM6 ? 6 : AT_DEV_MAX_CHANNELS;
+     }
+ 
+     if( !( env = GET_ENV() ) )

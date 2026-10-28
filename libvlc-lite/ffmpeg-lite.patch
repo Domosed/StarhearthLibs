@@ -1,0 +1,16 @@
+--- a/contrib/src/ffmpeg/rules.mak
++++ b/contrib/src/ffmpeg/rules.mak
+@@ -231,6 +231,13 @@
+
+ FFMPEGCONF += --nm="$(NM)" --ar="$(AR)" --ranlib="$(RANLIB)"
+
++# White TV libVLC lite: the switches of ffmpeg-lite.conf, set in config.mak by
++# compile-libvlc-lite.sh; without libgsm and libopenjpeg.
++ifdef FFMPEG_LITE_CONF
++FFMPEGCONF += $(FFMPEG_LITE_CONF)
++DEPS_ffmpeg := zlib $(DEPS_zlib)
++endif
++
+ $(TARBALLS)/ffmpeg-$(FFMPEG_BASENAME).tar.xz:
+ 	$(call download_git,$(FFMPEG_GITURL),$(FFMPEG_BRANCH),$(FFMPEG_HASH))
+
